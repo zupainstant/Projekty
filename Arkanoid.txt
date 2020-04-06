@@ -1,0 +1,203 @@
+//---------------------------------------------------------------------------
+
+#include <vcl.h>
+#pragma hdrstop
+
+#include "Unit1.h"
+//---------------------------------------------------------------------------
+#pragma package(smart_init)
+#pragma resource "*.dfm"
+TForm1 *Form1;
+
+int x = -5 ;
+int y = -8 ;
+
+int do_wygranej = 12 ;
+
+ bool kolizja(TImage * pilka , TImage * cegla)
+{
+ if( pilka->Left >= cegla->Left-pilka->Width &&
+     pilka->Left <= cegla->Left+cegla->Width &&
+     pilka->Top >= cegla->Top-pilka->Height  &&
+     pilka->Top <= cegla->Top+cegla->Height )
+     {
+     return true ;
+     }
+     else return false ;
+}
+
+//---------------------------------------------------------------------------
+__fastcall TForm1::TForm1(TComponent* Owner)
+        : TForm(Owner)
+{
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::Timer_PilkaTimer(TObject *Sender)
+{
+
+ UseDockManager = true ;
+ DockSite = false ;
+
+ pilka->Left = pilka->Left - x ;
+ pilka->Top = pilka->Top + y ;
+
+ //Odbicie pilki od lewej sciany
+ if (pilka->Left < tlo->Left) x = -x ;
+
+ //Odbicie pilki od prawej sciany
+ if (pilka->Left + pilka->Width >= tlo->Width) x = -x ;
+
+ //Odbicie pilki od gornej sciany
+ if (tlo->Top > pilka->Top) y = -y ;
+
+ //Odbicie pilki od dolenj sciany
+ if (tlo->Top+tlo->Height <= pilka->Top+pilka->Height) y = -y ;
+
+ //Przegrana
+ if (pilka->Top >= paletka->Top+paletka->Height)
+   {
+   Timer_Pilka->Enabled = false ;
+   pilka->Visible = false ;
+   Button1->Caption = "Przegrałeś ! Jeszcze Raz ?" ;
+   Button1->Visible = true ;
+   }
+   else if (pilka->Left > paletka->Left - pilka->Width/2 &&
+            pilka->Left < paletka->Left + paletka->Width &&
+            pilka->Top + pilka->Height > paletka->Top)
+            {
+            if (y>0) y = -y ;
+            }
+  if (do_wygranej <= 0)
+     {
+     Timer_Pilka->Enabled = false ;
+     pilka->Visible = false ;
+     Button1->Caption = "Wygrałeś ! Jeszcze Raz ?" ;
+     Button1->Visible = true ;
+     }
+
+  //Blok 1
+  if (kolizja(pilka , Image1)==true && Image1->Visible == true)
+  {x = -x ; y = -y ; Image1->Visible = false ; do_wygranej-- ;}
+
+  //Blok 2
+  if (kolizja(pilka , Image2)==true && Image2->Visible == true)
+  {x = -x ; y = -y ; Image2->Visible = false ; do_wygranej-- ;}
+
+  //Blok 3
+  if (kolizja(pilka , Image3)==true && Image3->Visible == true)
+  {x = -x ; y = -y ; Image3->Visible = false ; do_wygranej-- ;}
+
+  //Blok 4
+  if (kolizja(pilka , Image4)==true && Image4->Visible == true)
+  {x = -x ; y = -y ; Image4->Visible = false ; do_wygranej-- ;}
+
+  //Blok 5
+  if (kolizja(pilka , Image5)==true && Image5->Visible == true)
+  {x = -x ; y = -y ; Image5->Visible = false ; do_wygranej-- ;}
+
+  //Blok 6
+  if (kolizja(pilka , Image6)==true && Image6->Visible == true)
+  {x = -x ; y = -y ; Image6->Visible = false ; do_wygranej-- ;}
+
+  //Blok 7
+  if (kolizja(pilka , Image7)==true && Image7->Visible == true)
+  {x = -x ; y = -y ; Image7->Visible = false ; do_wygranej-- ;}
+
+  //Blok 8
+  if (kolizja(pilka , Image8)==true && Image8->Visible == true)
+  {x = -x ; y = -y ; Image8->Visible = false ; do_wygranej-- ;}
+
+  //Blok 9
+  if (kolizja(pilka , Image9)==true && Image9->Visible == true)
+  {x = -x ; y = -y ; Image9->Visible = false ; do_wygranej-- ;}
+
+  //Blok 10
+  if (kolizja(pilka , Image10)==true && Image10->Visible == true)
+  {x = -x ; y = -y ; Image10->Visible = false ; do_wygranej-- ;}
+
+  //Blok 11
+  if (kolizja(pilka , Image11)==true && Image11->Visible == true)
+  {x = -x ; y = -y ; Image11->Visible = false ; do_wygranej-- ;}
+
+  //Blok 12
+  if (kolizja(pilka , Image12)==true && Image12->Visible == true)
+  {x = -x ; y = -y ; Image12->Visible = false ; do_wygranej-- ;}
+
+
+}
+//---------------------------------------------------------------------------
+void __fastcall TForm1::FormKeyDown(TObject *Sender, WORD &Key,
+      TShiftState Shift)
+{
+ if (Key == VK_LEFT) lewo->Enabled = true ;
+ if (Key == VK_RIGHT) prawo->Enabled = true ;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::FormKeyUp(TObject *Sender, WORD &Key,
+      TShiftState Shift)
+{
+ if (Key == VK_LEFT) lewo->Enabled = false ;
+ if (Key == VK_RIGHT) prawo->Enabled = false ;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::lewoTimer(TObject *Sender)
+{
+ if (tlo->Left+10 < paletka->Left) paletka->Left -= 7 ;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::prawoTimer(TObject *Sender)
+{
+ if (tlo->Left+tlo->Width-10 > paletka->Left+paletka->Width) paletka->Left += 7 ;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::Button1Click(TObject *Sender)
+{
+ pilka->Left = 50 ;
+ pilka->Top = 50 ;
+
+ pilka->Visible = true ;
+ x = -8 ;
+ y = - 8 ;
+ Timer_Pilka->Enabled = true ;
+
+ Button1->Visible = false ;
+
+ do_wygranej = 12 ;
+ 
+ Image1->Visible = true ; Image2->Visible = true ; Image3->Visible = true ;
+ Image4->Visible = true ; Image5->Visible = true ; Image6->Visible = true ;
+ Image7->Visible = true ; Image8->Visible = true ; Image9->Visible = true ;
+ Image10->Visible = true ; Image11->Visible = true ; Image12->Visible = true ;
+}
+//---------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------
+
+//Instrukcje do przycisku Jeszcze Raz !!!
+
+void __fastcall TForm1::Button1Click(TObject *Sender)
+{
+ pilka->Left = 50 ;
+ pilka->Top = 50 ;
+
+ pilka->Visible = true ;
+ x = -8 ;
+ y = - 8 ;
+ Timer_Pilka->Enabled = true ;
+
+ Button1->Visible = false ;
+
+ do_wygranej = 12 ;
+ 
+ Image1->Visible = true ; Image2->Visible = true ; Image3->Visible = true ;
+ Image4->Visible = true ; Image5->Visible = true ; Image6->Visible = true ;
+ Image7->Visible = true ; Image8->Visible = true ; Image9->Visible = true ;
+ Image10->Visible = true ; Image11->Visible = true ; Image12->Visible = true ;
+}
+//---------------------------------------------------------------------------
+
